@@ -14,8 +14,10 @@ class App:
 
         select_frame = Frame(frame)
         select_frame.pack(side=TOP)
-
+        search_area = Frame(frame)
+        search_area.pack(side=TOP)
         media_buttons = Frame(frame)
+        select_frame.pack(side=TOP)
 
         self.cast_manager = manageCast.castDevice()
         self.device_selector = Listbox(select_frame)
@@ -27,8 +29,9 @@ class App:
         self.btn_select = Button(select_frame, text="Select Device", command=self.choose_device)
         self.btn_select.pack(side=LEFT)
 
-        self.txt_url = Entry(master)
-        self.txt_url.insert(0, "Url goes here")
+        self.txt_url = Entry(search_area)
+        self.txt_url['width'] = 50
+        self.txt_url.insert(0, "What you want?")
         self.txt_url.pack(side=TOP)
 
         media_buttons.pack(side=TOP)
@@ -67,10 +70,7 @@ class App:
         self.search_button['state'] = ACTIVE
 
     def play_url(self):
-        self.cast_manager.play_media()
-
-
-
+        self.cast_manager.play_media(self.txt_url.get())
 
 
 root = Tk()
