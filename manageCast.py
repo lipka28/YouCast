@@ -41,7 +41,7 @@ class castDevice:
         self.cast.register_handler(self.youtube_controler)
         print(self.cast.device)
 
-    def play_media(self, search_query):
+    def play_on_youtube(self, search_query):
         search = list(search_query)
         for i in range(len(search)):
             if search[i] == ' ':
@@ -51,11 +51,14 @@ class castDevice:
         target_url = "https://www.youtube.com/results?search_query={}&page=1".format(search)
 
         with youtube_dl.YoutubeDL(self.ydl_opts) as ydownloader:
-            ytdata = ydownloader.extract_info(target_url,download=False)
+            ytdata = ydownloader.extract_info(target_url, download=False)
             self.video=convert_to_list(ytdata['entries'])[0]['id']
             print(self.video)
 
         self.youtube_controler.play_video(self.video)
+
+    def simple_play(self, video_link):
+        self.cast_media.play_media(video_link, 'video/mp4')
 
     def stop_casting(self):
         self.cast_media.play_media(' ', ' ')

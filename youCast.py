@@ -12,6 +12,8 @@ class App:
         frame.master.title("YouCast")
         frame.pack()
 
+        self.yc_state = IntVar()
+
         select_frame = Frame(frame)
         select_frame.pack(side=TOP)
         search_area = Frame(frame)
@@ -29,10 +31,13 @@ class App:
         self.btn_select = Button(select_frame, text="Select Device", command=self.choose_device)
         self.btn_select.pack(side=LEFT)
 
+        self.youtube_check = Checkbutton(search_area, text="Youtube search", variable=self.yc_state)
+        self.youtube_check.pack(side=LEFT)
+
         self.txt_url = Entry(search_area)
         self.txt_url['width'] = 50
         self.txt_url.insert(0, "What you want?")
-        self.txt_url.pack(side=TOP)
+        self.txt_url.pack(side=LEFT)
 
         media_buttons.pack(side=TOP)
         self.btn_play = Button(media_buttons, text="Play new video", command=self.play_url)
@@ -70,7 +75,10 @@ class App:
         self.search_button['state'] = ACTIVE
 
     def play_url(self):
-        self.cast_manager.play_media(self.txt_url.get())
+        if self.yc_state.get() == 1:
+            self.cast_manager.play_on_youtube(self.txt_url.get())
+        else:
+            self.cast_manager.simple_play(self.txt_url.get())
 
 
 root = Tk()
