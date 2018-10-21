@@ -43,6 +43,9 @@ class App:
         self.btn_play = Button(media_buttons, text="Play new video", command=self.play_url)
         self.btn_play.pack(side=LEFT)
 
+        self.btn_ytadd = Button(media_buttons, text="Add to Youtube playlist", command=self.play_next)
+        self.btn_ytadd.pack(side=LEFT)
+
         self.btn_stop = Button(media_buttons, text="Stop", command=self.cast_manager.stop_casting)
         self.btn_stop.pack(side=LEFT)
 
@@ -76,9 +79,14 @@ class App:
 
     def play_url(self):
         if self.yc_state.get() == 1:
-            self.cast_manager.play_on_youtube(self.txt_url.get())
+            workerThred = threading.Thread(target=self.cast_manager.play_on_youtube, args=([self.txt_url.get()]), kwargs={})
+            workerThred.start()
         else:
             self.cast_manager.simple_play(self.txt_url.get())
+
+    def play_next(self):
+        workerThred = threading.Thread(target=self.cast_manager.add_to_playlist, args=([self.txt_url.get()]), kwargs={})
+        workerThred.start()
 
 
 root = Tk()

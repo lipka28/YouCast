@@ -1,7 +1,7 @@
 import pychromecast
 from pychromecast.controllers.youtube import YouTubeController
 import youtube_dl
-import time
+
 
 def convert_to_list(whatever):
     list = []
@@ -21,6 +21,7 @@ class castDevice:
         self.youtube_controler = YouTubeController()
         self.ydl_opts = {
             'noplaylist': True,
+            'playlistend': 1
         }
 
     def find_devices(self):
@@ -41,7 +42,7 @@ class castDevice:
         self.cast.register_handler(self.youtube_controler)
         print(self.cast.device)
 
-    def play_on_youtube(self, search_query):
+    def translate_from_youtube(self, search_query):
         search = list(search_query)
         for i in range(len(search)):
             if search[i] == ' ':
@@ -55,13 +56,19 @@ class castDevice:
             self.video=convert_to_list(ytdata['entries'])[0]['id']
             print(self.video)
 
+    def play_on_youtube(self,string):
+        self.translate_from_youtube(string)
         self.youtube_controler.play_video(self.video)
+
+    def add_to_playlist(self,string):
+        self.translate_from_youtube(string)
+        self.youtube_controler.play_next(self.video)
 
     def simple_play(self, video_link):
         self.cast_media.play_media(video_link, 'video/mp4')
 
     def stop_casting(self):
-        self.cast_media.play_media(' ', ' ')
+        self.cast_media.stop()
 
     def pause(self):
         self.cast_media.pause()
